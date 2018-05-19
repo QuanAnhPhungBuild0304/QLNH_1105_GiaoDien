@@ -9,10 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Reporting.WinForms;
+using System.Data.SqlClient;
 
 namespace NHAHANG_RIENG
 {
-    public partial class DoanhThu : Form
+    public partial class DoanhThu : MaterialSkin.Controls.MaterialForm
     {
         private Account loginAcc;
 
@@ -93,10 +95,27 @@ namespace NHAHANG_RIENG
             LoadDatetimePicker();
             LoadListBillByDate(dtp_in.Value, dtp_out.Value);
         }
-
+       /* private void SetParameterIn(string from)
+        {
+            ReportParameter rp = new ReportParameter("in");
+            rp.Values.Add(from);
+            reportViewer1.LocalReport.SetParameters(rp);
+        }
+        private void SetParameterOut(string to)
+        {
+            ReportParameter rp = new ReportParameter("out");
+            rp.Values.Add(to);
+            reportViewer1.LocalReport.SetParameters(rp);
+        }*/
         private void btThongke_Click(object sender, EventArgs e)
         {
            LoadListBillByDate(dtp_in.Value, dtp_out.Value);
+
+            /*QUANLYNHAHANG_DoanhThu dt = new QUANLYNHAHANG_DoanhThu();
+            ReportDataSource dts = new ReportDataSource("USP_GETLISTBILLBYDATE", dt.Tables[0]) ;
+           SetParameterIn(dtp_in.Value.ToString());
+            SetParameterOut(dtp_out.Value.ToString());
+            reportViewer1.RefreshReport();*/
         }
 
         #endregion
@@ -138,6 +157,22 @@ namespace NHAHANG_RIENG
             if (tonghoadon % 5 != 0)
                 trangcuoi++;
             txbTrangHientai.Text = trangcuoi.ToString();
+        }
+
+        private void btDangXuat_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Bạn thực đăng xuất?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                DangNhap dn = new DangNhap();
+                dn.Show();
+                this.Hide();
+            }
+        }
+
+        private void lbstatus_Click(object sender, EventArgs e)
+        {
+            AccountInfo acc = new AccountInfo(loginAcc);
+            acc.ShowDialog();
         }
     }
 }

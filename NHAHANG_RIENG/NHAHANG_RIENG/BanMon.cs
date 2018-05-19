@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Reporting.WinForms;
 
 namespace NHAHANG_RIENG
 {
@@ -18,7 +19,7 @@ namespace NHAHANG_RIENG
         private Account loginAcc;
 
         public Account LoginAcc { get => loginAcc; set => loginAcc = value; }
-
+        public int maban;
         public BanMon(Account acc)
         {
             InitializeComponent();
@@ -29,33 +30,45 @@ namespace NHAHANG_RIENG
             LoadTable();
             LoadCatery();
             LoadComboboxTable(cbxChuyenban);
+            LoadComboboxTable(cbxGopban);
 
             LoadBanDat();
             BanDatBinding();
+
+
         }
 
-        #region Mothor
+        #region Methor
         // Hàm đưa ds bàn ra cbx chuyển bàn
         void LoadComboboxTable(ComboBox cbx)
         {
             cbx.DataSource = TableDAO.Instance.LoadtableList();
             cbx.DisplayMember = "Name";
-        }
-
+        }   
 
         // Đưa ra tên user ở đầu form
         void ShowStatus(int type)
-        {
+        {            
             if (LoginAcc.Type == 0)
             {
                 panelQuayLai.Enabled = false;
-            //    lbStatus.Text = loginAcc.FullName.ToString() ;
+                lbStatus.Text = loginAcc.FullName.ToString();
+                lbStatus.Visible = true;
+
+                ////Câu chào thôi mà làm j mà thêm mày lại ko show đk tên
+              /*  int gio = DateTime.Now.Hour;
+                if (gio < 13)
+                    label2.Text = "Chào buổi sáng! ";
+                else if (gio > 12 && gio < 18)
+                    label2.Text = "Chào buổi chiều! ";
+                else label2.Text = "Chào buổi tối! ";*/
+
             }
             else
             {
                 panelQuayLai.Enabled = true;
+                panelStatus.Visible = false;
             }
-
         }
 
         // mỗi khi nhấn vào Loại món ăn thì sẽ phải load lại
@@ -95,10 +108,8 @@ namespace NHAHANG_RIENG
                         btn.BackColor = Color.Coral;
                         break;
                 }
-
                 flpTable.Controls.Add(btn);
             }
-
             //lbChonBan.Text = item.Name;
             //string a = item.Name;
         }
@@ -108,7 +119,18 @@ namespace NHAHANG_RIENG
             LoadComboboxTable(cbxBanso);
             BanDatBinding();
             EnableBT();
-
+        }
+ 
+        private void ltvhoadon_Click(object sender, EventArgs e) ///binding món ăn tới combobox
+        {
+            foreach(ListViewItem item in ltvhoadon.SelectedItems)
+            {
+                //cbxMon.Text = item.SubItems[0].Text;
+                Food food = FoodDAO.Instance.GetFoodByName(item.SubItems[0].Text);
+                cbxMon.SelectedItem = food;
+                cbxLoaimon.Text = food.LoaiMon;
+                cbxMon.Text = food.Name;
+            }
         }
         void LoadListTable()
         {
@@ -116,9 +138,14 @@ namespace NHAHANG_RIENG
         }
         void BanDatBinding()
         {
-            txbID.DataBindings.Clear(); txbGhiChu.DataBindings.Clear(); txb_khdat.DataBindings.Clear(); txb_sdtdat.DataBindings.Clear();
-            txb_sokhachdat.DataBindings.Clear(); cbxBanso.DataBindings.Clear();
-            dtp_ngaydat.DataBindings.Clear(); dtGio.DataBindings.Clear();
+            txbID.DataBindings.Clear();
+            txbGhiChu.DataBindings.Clear();
+            txb_khdat.DataBindings.Clear();
+            txb_sdtdat.DataBindings.Clear();
+            txb_sokhachdat.DataBindings.Clear();
+            cbxBanso.DataBindings.Clear();
+            dtp_ngaydat.DataBindings.Clear();
+            dtGio.DataBindings.Clear();
 
             txbID.DataBindings.Add(new Binding("text", dgvDatban.DataSource, "id"));
             txb_khdat.DataBindings.Add(new Binding("text", dgvDatban.DataSource, "tenkh"));
@@ -193,7 +220,6 @@ namespace NHAHANG_RIENG
 
         private void btAddMon_Click(object sender, EventArgs e)
         {
-
             try
             {
                 Table table = ltvhoadon.Tag as Table;
@@ -217,15 +243,13 @@ namespace NHAHANG_RIENG
                 LoadTable();
             }
             catch { }
-
-
         }
-
         private void btThanhtoan_Click(object sender, EventArgs e)
         {
-
             try
             {
+                maban = (ltvhoadon.Tag as Table).ID;
+                
                 Table table = ltvhoadon.Tag as Table;
                 int idBill = BillDAO.Instance.GetUncheckBillIdByTableID(table.ID);
                 int giamgia = (int)nudGiamgia.Value;
@@ -234,82 +258,101 @@ namespace NHAHANG_RIENG
                 //double tongtien_hoadon = double.Parse(txbshowtien.Text, NumberStyles.Currency);
                 double tien_giamgia = (tongtien_hoadon / 100) * giamgia;
                 double tongtien_thucte = tongtien_hoadon - tien_giamgia;
-
-
-                if (idBill != 1)
+                
+                if ( table.Status!= "Trống")
                 {
+                    Table tb1 = TableDAO.Instance.GetTableByName(lbBan.Text);
                     if (MessageBox.Show(String.Format("Thanh toán hóa đơn cho {0}?\n Tổng tiền: {1} VNĐ\n Giảm giá: {2}% Tức: {3} VNĐ\n Cần thanh toán: {4} VNĐ", table.Name, tongtien_hoadon, giamgia, tien_giamgia, tongtien_thucte), "Thông báo", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                     {
-                        HoaDon hd = new HoaDon();
-                        hd.ShowDialog();
-                        BillDAO.Instance.CheckOut(idBill, giamgia, (float)tongtien_hoadon, (float)tongtien_thucte);
+                        // HoaDon hd = new HoaDon();
+                        //hd.ShowDialog();
+                       BillDAO.Instance.CheckOut(idBill, giamgia, (float)tongtien_hoadon, (float)tongtien_thucte);
                         ShowBill(table.ID);
                         LoadTable();
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Bàn chưa gọi món!");
                 }
             }
             catch { }
 
         }
-        
 
-        private void btXoaMon_Click(object sender, EventArgs e)         //chưa xong
+        private void btXoaMon_Click(object sender, EventArgs e)         //chưa xong. xonng sau khi binding thành công
         {
-
             try
             {
                 Table table = ltvhoadon.Tag as Table;
-
                 int billID = BillDAO.Instance.GetUncheckBillIdByTableID(table.ID);
 
+                cbxMon.SelectedItem = ltvhoadon.Tag;
                 int foodID = (cbxMon.SelectedItem as Food).ID;
-                int countFoodList = (cbxMon.SelectedItem as BillInfo).Count;
-                int countFooddel = (int)nubXoaMon.Value;
-                //int 
-                int count = (int)nubXoaMon.Value;
+                string foodname = (cbxMon.SelectedItem as Food).Name;
+                int countFoodList = Convert.ToInt16(ltvhoadon.SelectedItems[0].SubItems[1].Text);   //Lấy số lượng món trong billinfo
+                //int countFoodList = (cbxMon.SelectedItem as BillInfo).Count;
+                   int countFooddel = (int)nubXoaMon.Value;        //số lương xóa
+                
+
 
                 if (billID == -1)
                 {
-
+                    MessageBox.Show("Bàn đang trống!");
                 }
                 else
                 {
-                    BillInfoDAO.Instance.InsertBillInfo(billID, foodID, count);
+                    if(countFoodList>=countFooddel*-1)
+                    {
+                        BillInfoDAO.Instance.InsertBillInfo(billID, foodID, countFooddel);
+                    }
                 }
 
                 ShowBill(table.ID);
                 LoadTable();
             }
-            catch { }
-
+            catch (Exception)
+            {}
         }
 
         /// Chuyển bàn
         private void btChuyenban_Click(object sender, EventArgs e)
         {
-            try
-            {
                 // lấy được id bàn 1 là từ bàn đang được chọn.
                 int idtable1 = (ltvhoadon.Tag as Table).ID;
 
                 // id bàn 2 là chọn từ combobox
                 int idtable2 = (cbxChuyenban.SelectedItem as Table).ID;
-
+            if ((cbxChuyenban.SelectedItem as Table).Status == "Trống")
+            {
                 // thông báo chueyern bàn
-                if (MessageBox.Show(String.Format("      THÔNG BÁO CHUYỂN BÀN:\n - Chuyển {0} sang {1}. YES / NO ?", (ltvhoadon.Tag as Table).Name, (cbxChuyenban.SelectedItem as Table).Name), "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                if (MessageBox.Show(String.Format("THÔNG BÁO CHUYỂN BÀN:\n - Chuyển {0} sang {1}. ?", (ltvhoadon.Tag as Table).Name, (cbxChuyenban.SelectedItem as Table).Name), "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
                     TableDAO.Instance.SwitchTable(idtable1, idtable2);
 
                     LoadTable();
                 }
+                lbBan.Text = cbxChuyenban.Text;
+                //ltvhoadon.Tag = cbxChuyenban.Items;
             }
-            catch { }
+            else MessageBox.Show((cbxChuyenban.SelectedItem as Table).Name+" đang sử dụng!");
+        }
+        private void btGopban_Click(object sender, EventArgs e)
+        {
+            Table table = ltvhoadon.Tag as Table;
+            int idtable1 = (ltvhoadon.Tag as Table).ID;
+            int idtable2 = (cbxGopban.SelectedItem as Table).ID;
+            TableDAO.Instance.GroupTable(idtable1, idtable2);
+          //  BillDAO.Instance.DelBill(idtable2);
 
+            LoadTable();
+            ShowBill(table.ID);
         }
 
         #endregion
         /// <summary>
         /// ========================ĐĂT BÀN======
+        /// 
         /// </summary>
         private void DisableBT()
         {
@@ -378,13 +421,11 @@ namespace NHAHANG_RIENG
                         if (BanDatDAO.Instance.DeleteBanDat(id))
                         {
                             MessageBox.Show("Hủy bàn đặt thành công!");
-
                         }
                     }
                 }
-
                 else
-                    MessageBox.Show("Chọn bàn bạn muốn hủy!");
+                    MessageBox.Show("Chọn bàn muốn hủy!");
             }
             catch { }
             LoadBanDat();
@@ -395,7 +436,7 @@ namespace NHAHANG_RIENG
             {
                 if (txb_khdat.Text == "" || txb_sdtdat.Text == "" || txb_sokhachdat.Text == "" || dtp_ngaydat.Text == "" || dtGio.Text == "")
                 {
-                    MessageBox.Show("Hãy điền đầy đủ thông tin đặt bàn!");
+                    MessageBox.Show("Cần điền đầy đủ thông tin!");
                 }
                 else
                 {
@@ -414,16 +455,15 @@ namespace NHAHANG_RIENG
                     if (BanDatDAO.Instance.InsertBanDat(tenkh, sdt, id, sokhach, gio, ngay, ghichu))
                     {
                         MessageBox.Show("Thêm bàn đặt thành công!");
-
                     }
                 }
             }
             if (nvDat == "sua")
             {
-                if (txbID.Text == "") MessageBox.Show("Vui lòng chọn bàn đặt bạn muốn sửa!");
+                if (txbID.Text == "") MessageBox.Show("Chọn bàn muốn sửa!");
                 else
                 {
-                    if (MessageBox.Show("Bạn thực sự muốn sửa ?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show("Chon YES để sửa?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         int idban = cbxBanso.SelectedIndex + 1;
                         BanDat ban = BanDatDAO.Instance.GetBanDatById(idban);
@@ -441,7 +481,6 @@ namespace NHAHANG_RIENG
                         if (BanDatDAO.Instance.UpdateBanDat(tenkh, sdt, idban, sokhach, gio, ngay, ghichu, id))
                         {
                             MessageBox.Show("Sửa bàn đặt thành công!");
-
                         }
                         else MessageBox.Show("Sửa thất bại!");
                     }
@@ -488,15 +527,6 @@ namespace NHAHANG_RIENG
             catch { }
         }
 
-        private void ltvhoadon_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void btGopban_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void lbStatus_Click(object sender, EventArgs e)
         {
             AccountInfo acc = new AccountInfo(loginAcc);
@@ -505,12 +535,17 @@ namespace NHAHANG_RIENG
 
         private void btDangXuat_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn thực sự muốn đăng xuất?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Chọn YES để đăng xuất!", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 DangNhap dn = new DangNhap();
                 this.Hide();
                 dn.ShowDialog();
             }
+        }
+
+        private void dtGio_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

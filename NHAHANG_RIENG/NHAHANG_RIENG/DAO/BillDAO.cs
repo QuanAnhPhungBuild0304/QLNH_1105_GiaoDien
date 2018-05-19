@@ -37,17 +37,20 @@ namespace NHAHANG_RIENG.DAO
             }
             return -1;
         }
-        
+
         public void InsertBill(int id)
         {
-            DataProvider.Instance.ExcuteNonQuery("exec USP_InsertBill  @IDTABLE ", new object[] {id});
+            DataProvider.Instance.ExcuteNonQuery("exec USP_InsertBill  @IDTABLE ", new object[] { id });
+        }
+        public void DelBill(int id)
+        {
+            DataProvider.Instance.ExcuteNonQuery("exec USP_DelBill  @IDTABLE ", new object[] { id });
         }
 
         public void CheckOut(int id,int giamgia, float tongtien_hoadon, float tongtien_thanhtoan)
         {
             string query = "UPDATE dbo.BILL set DATECHECKOUT = GETDATE(), STATUS =1," + "GIAMGIA=" + giamgia + ", TONGTIEN_HOADON =" + tongtien_hoadon +", TONGTIEN_THANHTOAN ="+ tongtien_thanhtoan + " where id ="+id;
             DataProvider.Instance.ExcuteQuery(query);
-
         }
 
         // HÀM THỐNG KÊ DS HÓA ĐƠN THEO NGÀY

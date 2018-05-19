@@ -523,6 +523,7 @@ insert into BANDAT values('phung1','0168361501','2','2','10-01-2019','10-01-2018
 select * from BANDAT
 
 go
+------------------
 
 alter PROC GETLISTBANDAT(
 @SDT VARCHAR(10)
@@ -545,3 +546,141 @@ BEGIN
 	FROM BANDAT A, TABLEfood B
 	WHERE A.IDBAN=B.ID and b.ID=@id
 END
+go
+--------------------------
+alter PROC USP_GETBILL_BYTABLE
+ (
+	@idTable int
+ )
+
+ AS
+ BEGIN
+	select BILL.IDTABLE, Food.NAME , BiIfo.COUNT , Food.GIA , Food.GIA*BiIfo.COUNT
+	 from dbo.BILLINFO as BiIfo, dbo.BILL as Bill, dbo.FOOD as Food 
+	 where BiIfo.IDBILL = Bill.ID and BiIfo.IDFOOD = Food.ID and Bill.status =0 and IDTABLE= @idTable
+ END
+
+ -------------GỘP BÀN
+ Gộp bàn trong phần mềm quản lí cafe
+2
+CTP
+Gộp bàn trong phần mềm quản lí cafe
+Mọi người xem giúp mình proc này sai ở đâu mà sao khi mình gộp 2 bàn với nhau thì bill bàn 2 vẫn chuyển qua được bàn 1 nhưng status bàn 2 vẫn không nhảy về " Trống "
+------
+
+alter PROC USP_GroupTable(
+@idtable1 INT, @idtable2 INT
+)
+AS
+BEGIN
+	DECLARE @idfirstBill INT
+	DECLARE @idsecondBill INT
+
+	DECLARE @isfirstTableEmpty INT =1
+	DECLARE @issecondTableEmpty INT =1
+
+	SELECT @idfirstBill=id FROM dbo.Bill WHERE idTable = @idtable1 AND STATUS = 0
+	SELECT @idsecondBill=id FROM dbo.Bill WHERE idTable = @idtable2 AND STATUS = 0
+
+	IF(@idfirstBill IS NULL)
+	BEGIN
+		INSERT dbo.Bill
+		        ( DateCheckin ,
+		          DateCheckout ,
+		          idTable ,
+		          STATUS ,
+		          GIAMGIA ,
+		          TONGTIEN_HOADON,
+				  TONGTIEN_THANHTOAN
+		        )
+		VALUES  ( GETDATE() , -- DateCheckin - date
+		          NULL , -- DateCheckout - date
+		          @idtable1, -- idTable - int
+		          0 , -- statusBill - int
+		          0 , -- Discout - int
+		          0.0,  -- TotalPrice - float
+				  0.0
+		        )
+		SELECT @idfirstBill=MAX(id) FROM dbo.Bill WHERE idTable =@idtable1 AND status = 0
+	END
+	 SELECT @isfirstTableEmpty = COUNT(*) FROM dbo.Billinfo WHERE idBill = @idfirstBill
+
+	IF(@idsecondBill IS NULL)
+	BEGIN
+		INSERT dbo.Bill
+		        ( DateCheckin ,
+		          DateCheckout ,
+		          idTable ,
+		          status ,
+		          GIAMGIA ,
+		          TONGTIEN_HOADON,
+				  TONGTIEN_THANHTOAN
+		        )
+		VALUES  ( GETDATE() , -- DateCheckin - date
+		          NULL , -- DateCheckout - date
+		          @idtable2 , -- idTable - int
+		          0 , -- statusBill - int
+		          0 , -- Discout - int
+		          0.0,  -- TotalPrice - float
+				  0.0
+		        )
+		SELECT @idsecondBill=MAX(id) FROM dbo.Bill WHERE idTable =@idtable2 AND status = 0
+    END
+	SELECT @issecondTableEmpty =COUNT(*) FROM dbo.Billinfo WHERE idBill = @idsecondBill
+    
+    UPDATE dbo.Billinfo SET idBill=@idfirstBill WHERE idBill = @idfirstBill
+	UPDATE dbo.Billinfo SET idBill =@idfirstBill WHERE idBill = @idsecondBill
+
+	SELECT @issecondTableEmpty =COUNT(*) FROM dbo.Billinfo WHERE idBill = @idsecondBill
+
+	--IF(@isfirstTableEmpty = 0)
+--	UPDATE dbo.TableFood SET status = N'Trống' WHERE id = @idtable2
+	IF(@issecondTableEmpty = 0)
+		UPDATE dbo.TableFood SET status = N'Trống' WHERE id = @idtable2
+END	
+GO
+
+ -- Tạo proc xóa Hóa Đơn
+ CREATE proc USP_DelBill
+ (	
+	@IDTABLE int
+ )
+ AS 
+ BEGIN
+	delete  dbo.BILL where IDTABLE=@IDTABLE
+END
+-----------
+CREATE FUNCTION [dbo].[fuConvertToUnsign1] ( @strInput NVARCHAR(4000) ) RETURNS NVARCHAR(4000) 
+AS 
+BEGIN 
+	IF @strInput IS NULL RETURN @strInput 
+	IF @strInput = '' RETURN @strInput DECLARE @RT NVARCHAR(4000) 
+	
+	DECLARE @SIGN_CHARS NCHAR(136) 
+	DECLARE @UNSIGN_CHARS NCHAR (136) 
+	
+	SET @SIGN_CHARS = N'ăâđêôơưàảãạáằẳẵặắầẩẫậấèẻẽẹéềểễệế ìỉĩịíòỏõọóồổỗộốờởỡợớùủũụúừửữựứỳỷỹỵý ĂÂĐÊÔƠƯÀẢÃẠÁẰẲẴẶẮẦẨẪẬẤÈẺẼẸÉỀỂỄỆẾÌỈĨỊÍ ÒỎÕỌÓỒỔỖỘỐỜỞỠỢỚÙỦŨỤÚỪỬỮỰỨỲỶỸỴÝ' +NCHAR(272)+ NCHAR(208) 
+	SET @UNSIGN_CHARS = N'aadeoouaaaaaaaaaaaaaaaeeeeeeeeee iiiiiooooooooooooooouuuuuuuuuuyyyyy AADEOOUAAAAAAAAAAAAAAAEEEEEEEEEEIIIII OOOOOOOOOOOOOOOUUUUUUUUUUYYYYYDD' 
+	DECLARE @COUNTER int
+	 DECLARE @COUNTER1 int 
+	 SET @COUNTER = 1 
+	 WHILE (@COUNTER <=LEN(@strInput)) 
+	 BEGIN 
+		SET @COUNTER1 = 1 WHILE (@COUNTER1 <=LEN(@SIGN_CHARS)+1)
+		BEGIN 
+			IF UNICODE(SUBSTRING(@SIGN_CHARS, @COUNTER1,1)) = UNICODE(SUBSTRING(@strInput,@COUNTER ,1) ) 
+			BEGIN 
+				IF @COUNTER=1 SET @strInput = SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@strInput, @COUNTER+1,LEN(@strInput)-1) 
+				ELSE SET @strInput = SUBSTRING(@strInput, 1, @COUNTER-1) +SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@strInput, @COUNTER+1,LEN(@strInput)- @COUNTER) 
+				BREAK 
+			END 
+			SET @COUNTER1 = @COUNTER1 +1 
+		END 
+		SET @COUNTER = @COUNTER +1 
+	END 
+	SET @strInput = replace(@strInput,' ','-') RETURN @strInput 
+END
+
+GO
+
+SELECT a.ID ,a.NAME as 'Name' , B.NAME as 'Catery', A.GIA as 'Gia' FROM DBO.FOOD a, DBO.FOODCATERY B where a.name like  N'%a%' and a.IDCATERY=b.ID

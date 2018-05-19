@@ -33,6 +33,7 @@
             this.ptbAvt = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txbPassOk = new System.Windows.Forms.TextBox();
+            this.lbNote = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txbNewpass = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -47,7 +48,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btQuayLai = new System.Windows.Forms.Button();
             this.openFileAVT = new System.Windows.Forms.OpenFileDialog();
-            this.lbNote = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
@@ -73,7 +73,7 @@
             // btChonAnh
             // 
             this.btChonAnh.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btChonAnh.Location = new System.Drawing.Point(87, 300);
+            this.btChonAnh.Location = new System.Drawing.Point(67, 291);
             this.btChonAnh.Margin = new System.Windows.Forms.Padding(4);
             this.btChonAnh.Name = "btChonAnh";
             this.btChonAnh.Size = new System.Drawing.Size(229, 47);
@@ -85,10 +85,10 @@
             // ptbAvt
             // 
             this.ptbAvt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ptbAvt.Location = new System.Drawing.Point(87, 26);
+            this.ptbAvt.Location = new System.Drawing.Point(29, 26);
             this.ptbAvt.Margin = new System.Windows.Forms.Padding(4);
             this.ptbAvt.Name = "ptbAvt";
-            this.ptbAvt.Size = new System.Drawing.Size(229, 246);
+            this.ptbAvt.Size = new System.Drawing.Size(296, 209);
             this.ptbAvt.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptbAvt.TabIndex = 0;
             this.ptbAvt.TabStop = false;
@@ -130,16 +130,28 @@
             this.txbPassOk.TabIndex = 13;
             this.txbPassOk.UseSystemPasswordChar = true;
             // 
+            // lbNote
+            // 
+            this.lbNote.AutoSize = true;
+            this.lbNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbNote.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.lbNote.Location = new System.Drawing.Point(70, 291);
+            this.lbNote.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbNote.Name = "lbNote";
+            this.lbNote.Size = new System.Drawing.Size(500, 20);
+            this.lbNote.TabIndex = 15;
+            this.lbNote.Text = "* Nhập mật khẩu để thay đổi thông tin, trước khi bấm \"Lưu\"";
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(12, 250);
+            this.label7.Location = new System.Drawing.Point(35, 255);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(205, 20);
+            this.label7.Size = new System.Drawing.Size(196, 20);
             this.label7.TabIndex = 12;
-            this.label7.Text = "Confirm New Password";
+            this.label7.Text = "Nhập lại mật khẩu mới";
             // 
             // txbNewpass
             // 
@@ -155,12 +167,12 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(87, 208);
+            this.label6.Location = new System.Drawing.Point(113, 212);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(133, 20);
+            this.label6.Size = new System.Drawing.Size(121, 20);
             this.label6.TabIndex = 10;
-            this.label6.Text = "New Password";
+            this.label6.Text = "Mật khẩu mới";
             // 
             // btLuu
             // 
@@ -218,18 +230,18 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(131, 82);
+            this.label5.Location = new System.Drawing.Point(168, 83);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(88, 20);
+            this.label5.Size = new System.Drawing.Size(65, 20);
             this.label5.TabIndex = 4;
-            this.label5.Text = "FullName";
+            this.label5.Text = "Họ tên";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(111, 124);
+            this.label4.Location = new System.Drawing.Point(128, 126);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(106, 20);
@@ -240,23 +252,23 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(128, 166);
+            this.label3.Location = new System.Drawing.Point(148, 169);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 20);
+            this.label3.Size = new System.Drawing.Size(85, 20);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Password";
+            this.label3.Text = "Mật khẩu";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(120, 40);
+            this.label2.Location = new System.Drawing.Point(101, 40);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(97, 20);
+            this.label2.Size = new System.Drawing.Size(132, 20);
             this.label2.TabIndex = 1;
-            this.label2.Text = "UserName";
+            this.label2.Text = "Tên đăng nhập";
             // 
             // btQuayLai
             // 
@@ -274,18 +286,6 @@
             // openFileAVT
             // 
             this.openFileAVT.FileName = "openFileDialog1";
-            // 
-            // lbNote
-            // 
-            this.lbNote.AutoSize = true;
-            this.lbNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbNote.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.lbNote.Location = new System.Drawing.Point(70, 291);
-            this.lbNote.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbNote.Name = "lbNote";
-            this.lbNote.Size = new System.Drawing.Size(500, 20);
-            this.lbNote.TabIndex = 15;
-            this.lbNote.Text = "* Nhập mật khẩu để thay đổi thông tin, trước khi bấm \"Lưu\"";
             // 
             // panel3
             // 
@@ -315,6 +315,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btQuayLai);
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
             this.Name = "AccountInfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thông tin tài khoản";

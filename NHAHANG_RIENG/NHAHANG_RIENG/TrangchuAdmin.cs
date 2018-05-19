@@ -22,7 +22,7 @@ namespace NHAHANG_RIENG
         {
             InitializeComponent();
             this.LoginAcc = acc;
-            lbstatus.Text = loginAcc.FullName.ToString() ;
+            lbstatus.Text = loginAcc.FullName.ToString();
         }
 
         #region event

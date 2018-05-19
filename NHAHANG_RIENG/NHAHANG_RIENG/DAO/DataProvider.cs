@@ -9,8 +9,22 @@ namespace NHAHANG_RIENG.DAO
 {
     class DataProvider
     {
-        private string sqlstringconnect = @"Data Source=.\SQLEXPRESS;Initial Catalog=QUANLYNHAHANG;Integrated Security=True";
+        public string sqlstringconnect = @"Data Source=.\SQLEXPRESS;Initial Catalog=QUANLYNHAHANG;Integrated Security=True";
 
+        public void Conect()
+        {
+            SqlConnection con = new SqlConnection(sqlstringconnect);
+            try
+            {
+                con.Open();
+            }
+            catch (Exception)
+            {
+                
+                
+            }
+        }
+      
         private static DataProvider instance; // Đóng gói : Ctrl + R + E
         //
         public static DataProvider Instance

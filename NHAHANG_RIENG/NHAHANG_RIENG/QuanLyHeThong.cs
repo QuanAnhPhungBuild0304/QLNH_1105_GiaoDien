@@ -25,38 +25,37 @@ namespace NHAHANG_RIENG
             InitializeComponent();
 
             this.loginAcc = acc;
-            lbstatus.Text = loginAcc.FullName.ToString() ;
             LoadCateryInCombobox(cbxDanhmuc);
         }
         private void QuanLyHeThong_Load(object sender, EventArgs e)
         {
             LoadListFood();
-            LoadListCatery();
             LoadCateryInCombobox(cbxDanhmuc);
-            AddBindingFood();
-            EnableBT();
-
+            EnableMon();
+            BindingFood();
+            ///
+            LoadListCatery();
+            EnableDM();             //bt của cả món ăn và danh mục
+            CateryBinding();
             ////
             LoadAccount();
+            EnableTK();
+            AccountBingding();
             //
             LoadBan();
+            EnableBan();
+            BanBingding();
         }
         #region methors
         public void LoadListFood()
         {
             dgvMonAn.DataSource = FoodDAO.Instance.GetListFood();
-            /*
-            dgvMonAn.Columns["id"].Width = 50;
-            dgvMonAn.Columns["name"].Width = 140;
-            dgvMonAn.Columns["loaimon"].Width = 140;
-            dgvMonAn.Columns["gia"].Width = 70;*/
         }
         void LoadListCatery()
         {
             dgvDanhMuc.DataSource = CateryDAO.Instance.GetListCatery();
-            EnableBT();
         }
-        public void AddBindingFood()
+        public void BindingFood()
         {
             txbID.DataBindings.Clear();
             txbTenMon.DataBindings.Clear();
@@ -65,12 +64,13 @@ namespace NHAHANG_RIENG
             txbID.DataBindings.Add(new Binding("text", dgvMonAn.DataSource, "ID", true, DataSourceUpdateMode.Never));
             txbTenMon.DataBindings.Add(new Binding("text", dgvMonAn.DataSource, "Name", true, DataSourceUpdateMode.Never));
             nudGia.DataBindings.Add(new Binding("Value", dgvMonAn.DataSource, "GIA", true, DataSourceUpdateMode.Never));
-
+        }
+        public void CateryBinding()
+        {
             txbIdDanhmuc.DataBindings.Clear();
             txbTenDm.DataBindings.Clear();
             txbIdDanhmuc.DataBindings.Add(new Binding("text", dgvDanhMuc.DataSource, "ID", true, DataSourceUpdateMode.Never));
             txbTenDm.DataBindings.Add(new Binding("text", dgvDanhMuc.DataSource, "Name", true, DataSourceUpdateMode.Never));
-
         }
 
         public void LoadCateryInCombobox(ComboBox cbx)
@@ -223,44 +223,53 @@ namespace NHAHANG_RIENG
          }
          */
         string nv = "";
-        private void DisableBT()
+        private void DisableMon()
         {
-            btThemDM.Enabled = false;
+            
             btThemMon.Enabled = false;
-            btSuaDM.Enabled = false;
             btSuamon.Enabled = false;
-            btXoaDM.Enabled = false;
             btXoamon.Enabled = false;
+            btTimkiem.Enabled = false;
 
             bt_LuuMon.Enabled = true;
-            bt_LuuCategory.Enabled = true;
             bt_HuyLuuMon.Enabled = true;
-            bt_HuyLuuCatrgory.Enabled = true;
 
             txbTenMon.Enabled = true;
             nudGia.Enabled = true;
             cbxDanhmuc.Enabled = true;
-            txbTenDm.Enabled = true;
         }
-        private void EnableBT()
+        private void EnableMon()
         {
-            btThemDM.Enabled = true;
             btThemMon.Enabled = true;
-            btSuaDM.Enabled = true;
             btSuamon.Enabled = true;
-            btXoaDM.Enabled = true;
             btXoamon.Enabled = true;
+            btTimkiem.Enabled = true;
 
             bt_LuuMon.Enabled = false;
-            bt_LuuCategory.Enabled = false;
             bt_HuyLuuMon.Enabled = false;
-            bt_HuyLuuCatrgory.Enabled = false;
 
             txbTenMon.Enabled = false;
             nudGia.Enabled = false;
             cbxDanhmuc.Enabled = false;
-            txbTenDm.Enabled = false;
 
+        }
+        private void DisableDM()
+        {
+            btThemDM.Enabled = false;
+            btSuaDM.Enabled = false;
+            btXoaDM.Enabled = false;
+            bt_LuuCategory.Enabled = true;
+            bt_HuyLuuCatrgory.Enabled = true;
+            txbTenDm.Enabled = true;
+        }
+        private void EnableDM()
+        {
+            btThemDM.Enabled = true;
+            btSuaDM.Enabled = true;
+            btXoaDM.Enabled = true;
+            bt_LuuCategory.Enabled = false;
+            bt_HuyLuuCatrgory.Enabled = false;
+            txbTenDm.Enabled = false;
         }
         private void ClearBox()
         {
@@ -269,14 +278,16 @@ namespace NHAHANG_RIENG
         private void btThemMon_Click(object sender, EventArgs e)
         {
             nv = "them";
-            DisableBT();
+            DisableMon();
+            LoadListFood();
             ClearBox();
-
+            bt_LuuMon.Focus();
         }
         private void btSuamon_Click(object sender, EventArgs e)
         {
             nv = "sua";
-            DisableBT();
+            DisableMon();
+            bt_LuuMon.Focus();
         }
         private void btXoamon_Click(object sender, EventArgs e)
         {
@@ -309,29 +320,44 @@ namespace NHAHANG_RIENG
         {
             if (nv == "them")
             {
-
                 if (txbTenMon.Text == "" || cbxDanhmuc.Text == "")
                 {
                     MessageBox.Show("Hãy điền đầy đủ thông tin!");
                 }
                 else
                 {
-                    int id = (cbxDanhmuc.SelectedItem as Catery).ID;
-                    Catery catery = CateryDAO.Instance.GetCateryById(id);       //GET CATERY BY NAME
-                    cbxDanhmuc.SelectedItem = catery;
-
-                    string name = txbTenMon.Text;
-                    int categoryid = catery.ID;
-                    float price = (float)nudGia.Value;
-
-                    if (FoodDAO.Instance.InsertFood(name, categoryid, price))
+                    string kt = "";
+                    for (int i = 0;i < dgvMonAn.Rows.Count;i++)
                     {
-                        MessageBox.Show("Thêm món thành công!");
+                        if (txbTenMon.Text == dgvMonAn.Rows[i].Cells["Name"].Value.ToString())
+                        {
+                            kt = "tt";
+                            break;
+                        }
+                    }
+                    if(kt=="tt")
+                    {
+                        MessageBox.Show("Món ăn đã tồn tại!");
+                    }
+                    else
+                    {
+                        int id = (cbxDanhmuc.SelectedItem as Catery).ID;
+                        Catery catery = CateryDAO.Instance.GetCateryById(id);       //GET CATERY BY NAME
+                        cbxDanhmuc.SelectedItem = catery;
 
+                        string name = txbTenMon.Text;
+                        int categoryid = catery.ID;
+                        float price = (float)nudGia.Value;
+
+                        if (FoodDAO.Instance.InsertFood(name, categoryid, price))
+                        {
+                            MessageBox.Show("Thêm món thành công!");
+                            kt = "";
+                        }
                     }
                 }
 
-
+                QuanLyHeThong_Load(sender, e);
             }
             if (nv == "sua")
             {
@@ -360,14 +386,13 @@ namespace NHAHANG_RIENG
                 }
             }
             QuanLyHeThong_Load(sender, e);
-            EnableBT();
             nv = "";
         }
 
         private void bt_HuyLuuMon_Click(object sender, EventArgs e)
         {
 
-            EnableBT();
+            EnableMon();
             ClearBox();
             QuanLyHeThong_Load(sender, e);
 
@@ -380,14 +405,15 @@ namespace NHAHANG_RIENG
         private void btThemDM_Click(object sender, EventArgs e)
         {
             nvDM = "themDM";
-            DisableBT();
+            DisableDM();
+            LoadListCatery();
             ClearBox();
-
+            bt_LuuCategory.Focus();
         }
         private void btSuaDM_Click(object sender, EventArgs e)
         {
             nvDM = "suaDM";
-            DisableBT();
+            DisableDM();
         }
 
 
@@ -424,16 +450,32 @@ namespace NHAHANG_RIENG
                 if (txbTenDm.Text == "") MessageBox.Show("Hãy nhập tên danh mục!");
                 else
                 {
-
-                    string name = txbTenDm.Text;
-
-                    if (CateryDAO.Instance.InsertCatery(name))
+                    string kt = "";
+                    for(int i=0; i<dgvDanhMuc.Rows.Count;i++)
                     {
-
-                        MessageBox.Show("Thêm danh mục thành công!");
+                        if (txbTenDm.Text == dgvDanhMuc.Rows[i].Cells["tenDM"].Value.ToString())
+                        {
+                            kt = "tt";
+                            break;
+                        }
 
                     }
-                    else MessageBox.Show("Thêm danh mục thất bại!");
+                    if(kt=="tt")
+                    {
+                        MessageBox.Show("Tên danh mục món ăn đã tồn tại");
+                    }
+                    else
+                    {
+                        string name = txbTenDm.Text;
+
+                        if (CateryDAO.Instance.InsertCatery(name))
+                        {
+
+                            MessageBox.Show("Thêm danh mục thành công!");
+                            kt = "";
+                        }
+                    }
+                   
                 }
 
             }
@@ -460,8 +502,7 @@ namespace NHAHANG_RIENG
                 }
 
             }
-
-            EnableBT();
+            
             QuanLyHeThong_Load(sender, e);
             nvDM = "";
         }
@@ -469,19 +510,17 @@ namespace NHAHANG_RIENG
         {
 
             ClearBox();
-            EnableBT();
+            EnableDM();
             QuanLyHeThong_Load(sender, e);
 
 
         }
-        ///========================================TÀI KHOẢN======================
-        ///
+   ///========================================TÀI KHOẢN======================
+        
 
         void LoadAccount()
         {
             dgvACC.DataSource = AccountDAO.Instance.GetListAccount();
-            AccountBingding();
-            EnableTK();
         }
         void AccountBingding()
         {
@@ -495,9 +534,14 @@ namespace NHAHANG_RIENG
             btThemTk.Enabled = false;
             btSuaTk.Enabled = false;
             btXoaTk.Enabled = false;
+            btReset.Enabled = false;
 
             btLuuTK.Enabled = true;
             btHuyLuuTK.Enabled = true;
+
+            txbFullname.Enabled = true;
+            nudPhanquyen.Enabled = true;
+            txbUsername.Enabled = true;
 
         }
         void EnableTK()
@@ -505,6 +549,7 @@ namespace NHAHANG_RIENG
             btThemTk.Enabled = true;
             btSuaTk.Enabled = true;
             btXoaTk.Enabled = true;
+            btReset.Enabled = true;
 
             btLuuTK.Enabled = false;
             btHuyLuuTK.Enabled = false;
@@ -518,13 +563,15 @@ namespace NHAHANG_RIENG
         }
         void AddAccount(string fullname, string username, int type)
         {
-            if (AccountDAO.Instance.InsertAccount(username, fullname, type))
-            {
-                MessageBox.Show("Thêm tài khoản thành công");
-            }
-            else
-                MessageBox.Show("Thêm tài khoản không thành công");
-
+            
+                if (AccountDAO.Instance.InsertAccount(username, fullname, type))
+                {
+                    MessageBox.Show("Thêm tài khoản thành công");
+                }
+                else
+                    MessageBox.Show("Thêm tài khoản không thành công");
+            
+            
         }
         void EditAccount(string fullname, string username, int type)
         {
@@ -573,13 +620,13 @@ namespace NHAHANG_RIENG
             DisableTK();
             nvTK = "them";
             ClearBoxTK();
-            txbFullname.Enabled = true;
-            nudPhanquyen.Enabled = true;
-            txbUsername.Enabled = true;
+            LoadAccount();
         }
         private void btSuaTk_Click(object sender, EventArgs e)
         {
             DisableTK();
+
+            txbUsername.Enabled = false ;
             nvTK = "sua";
         }
         private void btXoaTk_Click(object sender, EventArgs e)
@@ -593,19 +640,43 @@ namespace NHAHANG_RIENG
         {
             if (nvTK == "them")
             {
-                string username = txbUsername.Text;
-                string fullname = txbFullname.Text;
-                int type = (int)nudPhanquyen.Value;
-                AddAccount(fullname, username, type);
+                if(txbFullname.Text==""||txbUsername.Text=="")
+                {
+                    MessageBox.Show("Hãy điền đầy đủ thông tin!");
+                }
+                else
+                {
+                    try
+                    {
+                        
+                            string username = txbUsername.Text;
+                            string fullname = txbFullname.Text;
+                            int type = (int)nudPhanquyen.Value;
+                            AddAccount(fullname, username, type);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Tên đăng nhập đã tồn tại!");
+                    }
+                    
+                     
+                }
             }
             if (nvTK == "sua")
             {
-                string username = txbUsername.Text;
-                string fullname = txbFullname.Text;
-                int type = (int)nudPhanquyen.Value;
-                EditAccount(fullname, username, type);
+                try
+                {
+                    string username = txbUsername.Text;
+                    string fullname = txbFullname.Text;
+                    int type = (int)nudPhanquyen.Value;
+                    EditAccount(fullname, username, type);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Tên đăng nhập đã tồn tại!");
+                }
+               
             }
-            EnableTK();
             QuanLyHeThong_Load(sender, e);
         }
 
@@ -622,14 +693,13 @@ namespace NHAHANG_RIENG
             ResetPass(username);
         }
 
-
+        
+        /// 
 
         /////////==================bàn================
         void LoadBan()
         {
             dgvBan.DataSource = TableDAO.Instance.LoadtableList();
-            BanBingding();
-            EnableBan();
         }
         void BanBingding()
         {
@@ -667,6 +737,7 @@ namespace NHAHANG_RIENG
         {
             DisableBan();
             ClearBoxBan();
+            LoadBan();
             nvBan = "them";
         }
 
@@ -712,17 +783,30 @@ namespace NHAHANG_RIENG
                 if (txbTenBan.Text == "") MessageBox.Show("Hãy nhập tên bàn!");
                 else
                 {
-
-                    string name = txbTenBan.Text;
-                    string status = "Trống";
-
-                    if (TableDAO.Instance.InsertTable(name, status))
+                    int kt = 0;
+                    for(int i=0;i<dgvBan.Rows.Count;i++)
                     {
-
-                        MessageBox.Show("Thêm bàn thành công!");
+                        if (txbTenBan.Text == dgvBan.Rows[i].Cells["tenban"].Value.ToString())
+                        {
+                            kt = 1;
+                            break;
+                        }
 
                     }
-                    else MessageBox.Show("Thêm bàn thất bại!");
+                    if(kt==1) MessageBox.Show("Tên bàn đã tồn tại!");
+                    else
+                        {
+                        string name = txbTenBan.Text;
+                        string status = "Trống";
+
+                        if (TableDAO.Instance.InsertTable(name, status))
+                        {
+
+                            MessageBox.Show("Thêm bàn thành công!");
+
+                        }
+                    }
+
                 }
             }
             if (nvBan == "sua")
@@ -774,5 +858,7 @@ namespace NHAHANG_RIENG
             }
                 
         }
+
+       
     }
 }

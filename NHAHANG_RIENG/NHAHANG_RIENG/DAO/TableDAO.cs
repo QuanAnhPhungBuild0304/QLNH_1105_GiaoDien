@@ -58,9 +58,13 @@ namespace NHAHANG_RIENG.DAO
         }
 
         // hàm đổi chuyển  2 bàn cho nhau
-        public void SwitchTable (int idtable1, int idtable2)
+        public void SwitchTable(int idtable1, int idtable2)
         {
-            DataProvider.Instance.ExcuteQuery("USP_SWITCHTABLE @IDTABLE_1 , @IDTABLE_2", new object[] {idtable1, idtable2});
+            DataProvider.Instance.ExcuteQuery("USP_SWITCHTABLE @IDTABLE_1 , @IDTABLE_2", new object[] { idtable1, idtable2 });
+        }
+        public void GroupTable(int idtable1, int idtable2)
+        {
+            DataProvider.Instance.ExcuteQuery("USP_GROUPTABLE @IDTABLE_1 , @IDTABLE_2", new object[] { idtable1, idtable2 });
         }
         public bool InsertTable(string name, string status)
         {
@@ -85,6 +89,15 @@ namespace NHAHANG_RIENG.DAO
             int result = DataProvider.Instance.ExcuteNonQuery(query);
 
             return result > 0;
+        }
+        public Table GetTableByName(string Name)
+        {
+            DataTable data = DataProvider.Instance.ExcuteQuery("select * from tablefood where Name ='" + Name + "'");
+            foreach (DataRow item in data.Rows)
+            {
+                return new Table(item);
+            }
+            return null;
         }
     }
 }

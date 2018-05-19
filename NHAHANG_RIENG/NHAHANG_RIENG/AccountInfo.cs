@@ -34,13 +34,17 @@ namespace NHAHANG_RIENG
             txbHoTen.Text = acc.FullName.ToString();
 
             string file = acc.Avt.ToString();
-            
-            if (file.Length > 0)
+            try
             {
-                Image avt = Image.FromFile(file);
-                ptbAvt.Image = avt;
+                if (file.Length > 0)
+                {
+                    Image avt = Image.FromFile(file);
+                    ptbAvt.Image = avt;
+                }
             }
-           
+            catch (Exception)
+            {
+            }
             if(acc.Type == 1)
             {
                 txbPhanQuyen.Text = "ADMIN";
@@ -50,7 +54,6 @@ namespace NHAHANG_RIENG
                 txbPhanQuyen.Text = "USER";
             }
         }
-
         void UpdateAcc()
         {
             string fullname = txbHoTen.Text;
@@ -90,15 +93,11 @@ namespace NHAHANG_RIENG
             add { updateAccount += value; }
             remove { updateAccount -= value; }
         }
-
-
-
+        
         private void btQuayLai_Click(object sender, EventArgs e)
         {
             this.Hide();
         }
-
-
         private void btLuu_Click(object sender, EventArgs e)
         {
             UpdateAcc();

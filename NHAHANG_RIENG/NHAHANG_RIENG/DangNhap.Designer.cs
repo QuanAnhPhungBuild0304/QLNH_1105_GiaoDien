@@ -100,11 +100,11 @@
             // 
             this.btnThoat.Depth = 0;
             this.btnThoat.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnThoat.Location = new System.Drawing.Point(321, 287);
+            this.btnThoat.Location = new System.Drawing.Point(309, 287);
             this.btnThoat.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnThoat.Name = "btnThoat";
             this.btnThoat.Primary = true;
-            this.btnThoat.Size = new System.Drawing.Size(83, 31);
+            this.btnThoat.Size = new System.Drawing.Size(114, 31);
             this.btnThoat.TabIndex = 6;
             this.btnThoat.Text = "Thoát";
             this.btnThoat.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
             this.ckbShowpass.AutoSize = true;
             this.ckbShowpass.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ckbShowpass.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckbShowpass.Location = new System.Drawing.Point(266, 203);
+            this.ckbShowpass.Location = new System.Drawing.Point(266, 216);
             this.ckbShowpass.Margin = new System.Windows.Forms.Padding(4);
             this.ckbShowpass.Name = "ckbShowpass";
             this.ckbShowpass.Size = new System.Drawing.Size(157, 21);
@@ -153,7 +153,9 @@
             this.Controls.Add(this.txbPassword);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txbUsername);
+            this.MaximizeBox = false;
             this.Name = "DangNhap";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Đăng nhập";
             this.ResumeLayout(false);
             this.PerformLayout();

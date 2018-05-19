@@ -35,13 +35,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.btDangXuat = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btqlmon = new System.Windows.Forms.Button();
             this.btqlban = new System.Windows.Forms.Button();
             this.btDoanhthu = new System.Windows.Forms.Button();
-            this.btDangXuat = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -52,7 +52,7 @@
             this.lbstatus.AutoSize = true;
             this.lbstatus.Font = new System.Drawing.Font("Segoe UI", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbstatus.ForeColor = System.Drawing.Color.Red;
-            this.lbstatus.Location = new System.Drawing.Point(109, 9);
+            this.lbstatus.Location = new System.Drawing.Point(112, 9);
             this.lbstatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbstatus.Name = "lbstatus";
             this.lbstatus.Size = new System.Drawing.Size(0, 23);
@@ -109,15 +109,15 @@
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.lbstatus);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(269, 0);
+            this.panel2.Location = new System.Drawing.Point(266, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(113, 46);
+            this.panel2.Size = new System.Drawing.Size(116, 46);
             this.panel2.TabIndex = 46;
             // 
             // panel3
             // 
-            this.panel3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.panel3.BackColor = System.Drawing.SystemColors.Control;
             this.panel3.Controls.Add(this.btDangXuat);
             this.panel3.Controls.Add(this.panel5);
             this.panel3.Controls.Add(this.label1);
@@ -126,9 +126,22 @@
             this.panel3.Size = new System.Drawing.Size(941, 156);
             this.panel3.TabIndex = 48;
             // 
+            // btDangXuat
+            // 
+            this.btDangXuat.BackColor = System.Drawing.SystemColors.Control;
+            this.btDangXuat.BackgroundImage = global::NHAHANG_RIENG.Properties.Resources.settings;
+            this.btDangXuat.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btDangXuat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btDangXuat.Location = new System.Drawing.Point(846, 53);
+            this.btDangXuat.Name = "btDangXuat";
+            this.btDangXuat.Size = new System.Drawing.Size(83, 57);
+            this.btDangXuat.TabIndex = 49;
+            this.btDangXuat.UseVisualStyleBackColor = false;
+            this.btDangXuat.Click += new System.EventHandler(this.btDangXuat_Click);
+            // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.panel5.BackColor = System.Drawing.SystemColors.Control;
             this.panel5.Controls.Add(this.panel2);
             this.panel5.Location = new System.Drawing.Point(547, 0);
             this.panel5.Name = "panel5";
@@ -138,8 +151,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.SystemColors.Control;
             this.label1.Font = new System.Drawing.Font("Segoe Marker", 48F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(96, 49);
+            this.label1.Location = new System.Drawing.Point(99, 53);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(545, 93);
             this.label1.TabIndex = 0;
@@ -147,7 +161,7 @@
             // 
             // panel4
             // 
-            this.panel4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.panel4.BackColor = System.Drawing.SystemColors.Control;
             this.panel4.BackgroundImage = global::NHAHANG_RIENG.Properties.Resources.food;
             this.panel4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.panel4.Location = new System.Drawing.Point(-1, 76);
@@ -197,19 +211,6 @@
             this.btDoanhthu.UseVisualStyleBackColor = false;
             this.btDoanhthu.Click += new System.EventHandler(this.btDoanhthu_Click);
             // 
-            // btDangXuat
-            // 
-            this.btDangXuat.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.btDangXuat.BackgroundImage = global::NHAHANG_RIENG.Properties.Resources.settings;
-            this.btDangXuat.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btDangXuat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btDangXuat.Location = new System.Drawing.Point(846, 53);
-            this.btDangXuat.Name = "btDangXuat";
-            this.btDangXuat.Size = new System.Drawing.Size(83, 57);
-            this.btDangXuat.TabIndex = 49;
-            this.btDangXuat.UseVisualStyleBackColor = false;
-            this.btDangXuat.Click += new System.EventHandler(this.btDangXuat_Click);
-            // 
             // TrangchuAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -225,6 +226,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btDoanhthu);
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
             this.Name = "TrangchuAdmin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Trang chủ";
